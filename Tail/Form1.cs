@@ -14,20 +14,42 @@ namespace Tail
     {
         private string filePath = "";
         private int startPos = -1;
+        private bool isStarted = false;
 
         public Form1()
         {
             InitializeComponent();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            this.isStarted = false;
+            this.button1.Image = Image.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), @"img\start.png"));
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            string imageFile = "";
+            if(isStarted == true)
+            {
+                this.isStarted = false;
+                imageFile = "stop.png";
+            }
+            else
+            {
+                this.isStarted = true;
+                imageFile = "start.png";
+            }
+            this.button1.Image = Image.FromFile(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.ExecutablePath), @"img\", imageFile));
+
             filePath = SelectFile("", filePath);
 
             int b = GetFileLineNum(filePath);
 
 
-            while (true)
+            while (isStarted)
             {
                 var c = GetTail(filePath);
 
